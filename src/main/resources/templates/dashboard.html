@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Restaurant Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            🍽️ Resturant
+        </div>
+        <ul class="nav-links">
+            <li><a href="/" class="active">Dashboard</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/tables">Tables</a></li>
+            <li><a href="/orders">Orders</a></li>
+            <li><a href="/billing">Billing</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div><strong>Welcome back, Admin</strong></div>
+            <div style="font-size: 0.875rem; color: var(--text-muted);">Today, <span
+                    th:text="${#calendars.format(#calendars.createNow(), 'MMM dd, yyyy')}"></span></div>
+        </header>
+
+        <div class="content-wrapper">
+            <h1 class="page-title">Dashboard Overview</h1>
+
+            <div class="card-grid">
+                <div class="stat-card">
+                    <span class="stat-title">Menu Items</span>
+                    <span class="stat-value" th:text="${menuItemsCount}">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">Total Tables</span>
+                    <span class="stat-value" th:text="${tablesCount}">0</span>
+                </div>
+                <div class="stat-card">
+                    <span class="stat-title">Active Orders</span>
+                    <span class="stat-value" th:text="${activeOrders}">0</span>
+                </div>
+            </div>
+
+            <!-- More Dashboard widgets could go here -->
+            <div class="card-grid" style="grid-template-columns: 1fr;">
+                <div class="stat-card"
+                    style="background: linear-gradient(135deg, var(--primary-color), var(--primary-hover)); color: white;">
+                    <h3>Quick Actions</h3>
+                    <div style="margin-top: 15px; display: flex; gap: 10px;">
+                        <a href="/menu" class="btn"
+                            style="background: white; color: var(--primary-color); text-decoration: none;">Manage
+                            Menu</a>
+                        <a href="/tables" class="btn"
+                            style="background: white; color: var(--primary-color); text-decoration: none;">View
+                            Tables</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Billing & Invoices</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            🍽️ Restaurant
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/tables">Tables</a></li>
+            <li><a href="/orders">Orders</a></li>
+            <li><a href="/billing" class="active">Billing</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div><strong>Billing & Invoices</strong></div>
+        </header>
+
+        <div class="content-wrapper">
+            <h1 class="page-title">Active Bills</h1>
+
+            <div class="card-grid" style="grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));">
+                <div th:each="order : ${orders}" class="stat-card" style="position: relative;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                        <span style="font-weight: 600; font-size: 1.25rem;">Invoice #<span th:text="${order.id}"></span></span>
+                        <span th:class="'badge ' + ${order.status.toLowerCase()}" th:text="${order.status}"></span>
+                    </div>
+                    
+                    <div style="color: var(--text-muted); font-size: 0.875rem; margin-bottom: 15px;">
+                        Table: <strong th:text="${order.restaurantTable.tableNumber}"></strong>
+                    </div>
+
+                    <div style="background: #f9fafb; padding: 10px; border-radius: 6px; margin-bottom: 20px;">
+                        <table style="width: 100%; font-size: 0.875rem;">
+                            <tr th:each="item : ${order.items}">
+                                <td th:text="${item.quantity} + 'x ' + ${item.menuItem.name}"></td>
+                                <td style="text-align: right;" th:text="'$' + ${item.subtotal}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(order.items)}">
+                                <td colspan="2" style="font-style: italic; color: #9ca3af;">No items</td>
+                            </tr>
+                        </table>
+                        <div style="border-top: 1px solid #e5e7eb; margin-top: 10px; padding-top: 10px; display: flex; justify-content: space-between; font-weight: 600; font-size: 1rem;">
+                            <span>Total:</span>
+                            <span th:text="'$' + ${order.getTotalAmount()}"></span>
+                        </div>
+                    </div>
+
+                    <form th:action="@{/billing/pay}" method="post" style="margin-top: auto;">
+                        <input type="hidden" name="orderId" th:value="${order.id}" />
+                        <button type="submit" class="btn" style="width: 100%; background: var(--success); color: white;">Process Payment</button>
+                    </form>
+                </div>
+                <div th:if="${#lists.isEmpty(orders)}" style="color: var(--text-muted);">
+                    No active bills to process.
+                </div>
+            </div>
+        </div>
+    </main>
+
+</body>
+</html>

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Menu Management</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            🍽️ RestoMan
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/menu" class="active">Menu</a></li>
+            <li><a href="/tables">Tables</a></li>
+            <li><a href="/orders">Orders</a></li>
+            <li><a href="/billing">Billing</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div><strong>Menu Management</strong></div>
+        </header>
+
+        <div class="content-wrapper">
+            
+            <div class="action-bar">
+                <h1 class="page-title" style="margin: 0;">Our Menu</h1>
+            </div>
+
+            <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
+                
+                <!-- Add Form -->
+                <div class="stat-card" style="height: fit-content;">
+                    <h3 style="margin-bottom: 20px;">Add New Item</h3>
+                    <form th:action="@{/menu/add}" method="post">
+                        <div class="form-group">
+                            <label>Name</label>
+                            <input type="text" name="name" required placeholder="e.g. Pasta Buffalo">
+                        </div>
+                        <div class="form-group">
+                            <label>Description</label>
+                            <input type="text" name="description" placeholder="Short description">
+                        </div>
+                        <div class="form-group">
+                            <label>Price</label>
+                            <input type="number" step="0.01" name="price" required placeholder="0.00">
+                        </div>
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" required>
+                                <option value="Starter">Starter</option>
+                                <option value="Main">Main Course</option>
+                                <option value="Dessert">Dessert</option>
+                                <option value="Drink">Drink</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;">Add Item</button>
+                    </form>
+                </div>
+
+                <!-- Table -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Price</th>
+                                <th>Description</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="item : ${menuItems}">
+                                <td th:text="${item.name}"></td>
+                                <td><span class="badge available" th:text="${item.category}"></span></td>
+                                <td th:text="'$' + ${item.price}"></td>
+                                <td th:text="${item.description}"></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(menuItems)}">
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">No menu items found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+</html>

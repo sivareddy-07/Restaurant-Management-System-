@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Login - Restaurant Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        .login-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-hover));
+            width: 100%;
+        }
+
+        .login-card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            width: 100%;
+            max-width: 400px;
+            text-align: center;
+            animation: fadeInUp 0.5s ease-out forwards;
+        }
+
+        .login-card h2 {
+            margin-bottom: 30px;
+            color: var(--text-main);
+        }
+
+        .alert {
+            padding: 10px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 0.875rem;
+        }
+
+        .alert-error {
+            background: #fee2e2;
+            color: #b91c1c;
+        }
+
+        .alert-success {
+            background: #d1fae5;
+            color: #065f46;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="login-container">
+        <div class="login-card">
+            <h2>🍽️ Restaurant Login</h2>
+
+            <div th:if="${param.error}" class="alert alert-error">
+                Invalid username and password.
+            </div>
+            <div th:if="${param.logout}" class="alert alert-success">
+                You have been logged out.
+            </div>
+
+            <form th:action="@{/login}" method="post">
+                <div class="form-group" style="text-align: left;">
+                    <label>Username</label>
+                    <input type="text" name="username" required autofocus placeholder="Enter your username">
+                </div>
+                <div class="form-group" style="text-align: left; margin-bottom: 25px;">
+                    <label>Password</label>
+                    <input type="password" name="password" required placeholder="Enter your password">
+                </div>
+                <!-- CSRF token is automatically added by Thymeleaf when using th:action -->
+                <button type="submit" class="btn" style="width: 100%; padding: 12px; font-size: 1rem;">Log In</button>
+            </form>
+
+            <div style="margin-top: 20px; font-size: 0.875rem; color: var(--text-muted);">
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>
