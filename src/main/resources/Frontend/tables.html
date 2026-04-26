@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Tables Management</title>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            Restaurant
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/tables" class="active">Tables</a></li>
+            <li><a href="/orders">Orders</a></li>
+            <li><a href="/billing">Billing</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit"
+                        style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div><strong>Tables Management</strong></div>
+        </header>
+
+        <div class="content-wrapper">
+
+            <div class="action-bar">
+                <h1 class="page-title" style="margin: 0;">Restaurant Tables</h1>
+            </div>
+
+            <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
+
+                <!-- Add Form -->
+                <div class="stat-card" style="height: fit-content;">
+                    <h3 style="margin-bottom: 20px;">Add New Table</h3>
+                    <form th:action="@{/tables/add}" method="post">
+                        <div class="form-group">
+                            <label>Table Number/Name</label>
+                            <input type="text" name="tableNumber" required placeholder="e.g. T5">
+                        </div>
+                        <div class="form-group">
+                            <label>Capacity</label>
+                            <input type="number" name="capacity" required placeholder="e.g. 4">
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;">Add Table</button>
+                    </form>
+                </div>
+
+                <!-- Table View -->
+                <div class="card-grid"
+                    style="grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); grid-auto-rows: min-content;">
+                    <div class="stat-card" th:each="table : ${tables}"
+                        style="text-align: center; padding: 30px 15px; position: relative;">
+                        <form th:action="@{/tables/delete}" method="post"
+                            style="position: absolute; top: 10px; right: 10px; margin: 0;">
+                            <input type="hidden" name="id" th:value="${table.id}" />
+                            <button type="submit"
+                                style="background: none; border: none; color: var(--danger); cursor: pointer; font-size: 1.5rem; line-height: 1;"
+                                title="Remove Table">&times;</button>
+                        </form>
+                        <h2 th:text="${table.tableNumber}"></h2>
+                        <div style="font-size: 0.875rem; color: var(--text-muted); margin: 10px 0;">Capacity: <span
+                                th:text="${table.capacity}"></span></div>
+                        <span th:class="'badge ' + ${table.status.toLowerCase()}" th:text="${table.status}"
+                            style="margin-bottom: 15px; display: inline-block;"></span>
+
+                        <div style="display: flex; gap: 5px; justify-content: center; margin-top: 10px;">
+                            <form th:if="${table.status == 'AVAILABLE'}" th:action="@{/tables/status}" method="post"
+                                style="margin: 0;">
+                                <input type="hidden" name="id" th:value="${table.id}" />
+                                <input type="hidden" name="status" value="OCCUPIED" />
+                                <button type="submit" class="btn"
+                                    style="padding: 6px 12px; font-size: 0.8rem; background: var(--warning); color: white;">Mark
+                                    Occupied</button>
+                            </form>
+                            <form th:if="${table.status == 'OCCUPIED'}" th:action="@{/tables/status}" method="post"
+                                style="margin: 0;">
+                                <input type="hidden" name="id" th:value="${table.id}" />
+                                <input type="hidden" name="status" value="AVAILABLE" />
+                                <button type="submit" class="btn"
+                                    style="padding: 6px 12px; font-size: 0.8rem; background: var(--success); color: white;">Mark
+                                    Available</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

@@ -27,7 +27,8 @@ public class CustomerOrder {
     @OneToMany(mappedBy = "customerOrder", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<OrderItem> items = new ArrayList<>();
 
-    public CustomerOrder() {}
+    public CustomerOrder() {
+    }
 
     public CustomerOrder(RestaurantTable restaurantTable, String status, LocalDateTime orderTime) {
         this.restaurantTable = restaurantTable;
@@ -76,8 +77,10 @@ public class CustomerOrder {
     }
 
     public BigDecimal getTotalAmount() {
+        if (items == null)
+            return BigDecimal.ZERO;
         return items.stream()
-                .map(OrderItem::getSubtotal)
+                .map(item -> item.getSubtotal() != null ? item.getSubtotal() : BigDecimal.ZERO)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
     }
 }

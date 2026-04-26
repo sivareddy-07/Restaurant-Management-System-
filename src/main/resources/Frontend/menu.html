@@ -1,16 +1,18 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
+
 <head>
     <meta charset="UTF-8">
     <title>Menu Management</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
+
 <body>
 
     <aside class="sidebar">
         <div class="sidebar-header">
-            🍽️ RestoMan
+            Restaurant
         </div>
         <ul class="nav-links">
             <li><a href="/">Dashboard</a></li>
@@ -20,7 +22,8 @@
             <li><a href="/billing">Billing</a></li>
             <li>
                 <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
-                    <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                    <button type="submit"
+                        style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
                 </form>
             </li>
         </ul>
@@ -32,13 +35,13 @@
         </header>
 
         <div class="content-wrapper">
-            
+
             <div class="action-bar">
                 <h1 class="page-title" style="margin: 0;">Our Menu</h1>
             </div>
 
             <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
-                
+
                 <!-- Add Form -->
                 <div class="stat-card" style="height: fit-content;">
                     <h3 style="margin-bottom: 20px;">Add New Item</h3>
@@ -83,11 +86,12 @@
                             <tr th:each="item : ${menuItems}">
                                 <td th:text="${item.name}"></td>
                                 <td><span class="badge available" th:text="${item.category}"></span></td>
-                                <td th:text="'$' + ${item.price}"></td>
+                                <td th:text="'₹' + ${item.price}"></td>
                                 <td th:text="${item.description}"></td>
                             </tr>
                             <tr th:if="${#lists.isEmpty(menuItems)}">
-                                <td colspan="4" style="text-align: center; color: var(--text-muted);">No menu items found.</td>
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">No menu items
+                                    found.</td>
                             </tr>
                         </tbody>
                     </table>
@@ -99,4 +103,5 @@
     </main>
 
 </body>
+
 </html>

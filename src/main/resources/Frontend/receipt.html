@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Receipt - Order #[[${order.id}]]</title>
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <style>
+        body {
+            background-color: #e5e7eb;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            font-family: 'Inter', system-ui, sans-serif;
+        }
+
+        .receipt-container {
+            background: #fff;
+            width: 100%;
+            max-width: 400px;
+            padding: 40px;
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+            position: relative;
+            margin: 40px 0;
+            /* Receipt edge styling */
+            background-image: radial-gradient(circle at 10px 0, transparent 10px, #fff 11px);
+            background-size: 20px 20px;
+            background-repeat: repeat-x;
+            background-position: bottom;
+            border-top: 10px solid var(--primary-color);
+        }
+
+        .receipt-content {
+            font-family: 'Courier Prime', monospace;
+            color: #1f2937;
+        }
+
+        .receipt-header {
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 2px dashed #d1d5db;
+            padding-bottom: 20px;
+        }
+
+        .receipt-header h1 {
+            font-size: 1.5rem;
+            margin: 0 0 10px 0;
+            font-weight: bold;
+        }
+
+        .receipt-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            font-size: 0.9rem;
+        }
+
+        .item-list {
+            width: 100%;
+            margin-bottom: 20px;
+            border-collapse: collapse;
+        }
+
+        .item-list th {
+            text-align: left;
+            border-bottom: 1px dashed #d1d5db;
+            padding-bottom: 5px;
+            font-weight: bold;
+        }
+
+        .item-list td {
+            padding: 10px 0;
+        }
+
+        .item-list .qty {
+            text-align: center;
+            width: 50px;
+        }
+
+        .item-list .price {
+            text-align: right;
+            width: 80px;
+        }
+
+        .receipt-total {
+            border-top: 2px dashed #d1d5db;
+            padding-top: 20px;
+            margin-top: 10px;
+            font-size: 1.2rem;
+            font-weight: bold;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .actions {
+            margin-top: 40px;
+            display: flex;
+            gap: 15px;
+        }
+
+        .actions button,
+        .actions a {
+            flex: 1;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-outline {
+            background: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+            padding: 10px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* Hide actions when printing */
+        @media print {
+            body {
+                background: white;
+                align-items: flex-start;
+            }
+
+            .receipt-container {
+                box-shadow: none;
+                margin: 0;
+                padding: 20px;
+            }
+
+            .actions {
+                display: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="receipt-container">
+        <div class="receipt-content">
+            <div class="receipt-header">
+                <h1>RESTOMAN</h1>
+                <p>123 Culinary Ave, Food City</p>
+                <p>Tel: (555) 123-4567</p>
+            </div>
+
+            <div class="receipt-info">
+                <div>
+                    <strong>Order #:</strong> <span th:text="${order.id}"></span><br>
+                    <strong>Table:</strong> <span th:text="${order.restaurantTable?.tableNumber ?: 'N/A'}"></span>
+                </div>
+                <div style="text-align: right;">
+                    <strong>Date:</strong> <span
+                        th:text="${order.orderTime != null ? #temporals.format(order.orderTime, 'dd/MM/yyyy') : 'N/A'}"></span><br>
+                    <strong>Time:</strong> <span
+                        th:text="${order.orderTime != null ? #temporals.format(order.orderTime, 'HH:mm') : 'N/A'}"></span>
+                </div>
+            </div>
+
+            <table class="item-list">
+                <thead>
+                    <tr>
+                        <th>Item</th>
+                        <th class="qty">Qty</th>
+                        <th class="price">Amount</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr th:each="item : ${order.items}">
+                        <td th:text="${item.menuItem?.name ?: 'Unknown Item'}"></td>
+                        <td class="qty" th:text="${item.quantity}"></td>
+                        <td class="price" th:text="'₹' + ${item.subtotal != null ? item.subtotal : '0.00'}"></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="receipt-total">
+                <span>TOTAL</span>
+                <span th:text="'₹' + ${order.getTotalAmount()}"></span>
+            </div>
+
+            <div style="text-align: center; margin-top: 30px; font-size: 0.9rem;">
+                <p>Thank you for dining with us!</p>
+                <p>Please come again.</p>
+            </div>
+        </div>
+
+        <div class="actions">
+            <button onclick="window.print()" class="btn-outline">🖨️ Print</button>
+            <a href="/billing" class="btn">Return</a>
+        </div>
+    </div>
+
+</body>
+
+</html>

@@ -25,7 +25,8 @@ public class OrderItem {
     @Column(nullable = false)
     private BigDecimal subtotal;
 
-    public OrderItem() {}
+    public OrderItem() {
+    }
 
     public OrderItem(CustomerOrder customerOrder, MenuItem menuItem, int quantity) {
         this.customerOrder = customerOrder;

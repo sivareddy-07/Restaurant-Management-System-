@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Active Orders</title>
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+
+<body>
+
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            Sivas Restaurant
+        </div>
+        <ul class="nav-links">
+            <li><a href="/">Dashboard</a></li>
+            <li><a href="/menu">Menu</a></li>
+            <li><a href="/tables">Tables</a></li>
+            <li><a href="/orders" class="active">Orders</a></li>
+            <li><a href="/billing">Billing</a></li>
+            <li>
+                <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
+                    <button type="submit"
+                        style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                </form>
+            </li>
+        </ul>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div><strong>Orders Management</strong></div>
+        </header>
+
+        <div class="content-wrapper">
+
+            <div class="action-bar">
+                <h1 class="page-title" style="margin: 0;">Active Orders</h1>
+            </div>
+
+            <div class="card-grid" style="grid-template-columns: 1fr 2fr;">
+                <!-- Create Order Form -->
+                <div class="stat-card" style="height: fit-content;">
+                    <h3 style="margin-bottom: 20px;">Create New Order</h3>
+                    <form th:action="@{/orders/add}" method="post">
+                        <div class="form-group">
+                            <label>Select Table</label>
+                            <select name="tableId" required>
+                                <option value="" disabled selected>Choose a table...</option>
+                                <option th:each="table : ${availableTables}" th:value="${table.id}"
+                                    th:text="${table.tableNumber} + ' (Cap: ' + ${table.capacity} + ')'"></option>
+                            </select>
+                            <small th:if="${#lists.isEmpty(availableTables)}"
+                                style="color: var(--danger); margin-top: 5px; font-size: 0.8rem;">No tables
+                                available.</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Select Menu Item</label>
+                            <select name="menuItemId" required>
+                                <option value="" disabled selected>Choose an item...</option>
+                                <option th:each="item : ${menuItems}" th:value="${item.id}"
+                                    th:text="${item.name} + ' - ₹' + ${item.price}"></option>
+                            </select>
+                            <small th:if="${#lists.isEmpty(menuItems)}"
+                                style="color: var(--danger); margin-top: 5px; font-size: 0.8rem;">No menu items
+                                available.</small>
+                        </div>
+                        <div class="form-group">
+                            <label>Quantity</label>
+                            <input type="number" name="quantity" required min="1" value="1">
+                        </div>
+                        <button type="submit" class="btn" style="width: 100%;"
+                            th:disabled="${#lists.isEmpty(availableTables) or #lists.isEmpty(menuItems)}">Place
+                            Order</button>
+                    </form>
+                </div>
+
+                <!-- Orders Table -->
+                <div class="table-container" style="align-self: start;">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Table</th>
+                                <th>Time</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="order : ${orders}">
+                                <td th:text="'#' + ${order.id}"></td>
+                                <td th:text="${order.restaurantTable.tableNumber}"></td>
+                                <td th:text="${#temporals.format(order.orderTime, 'HH:mm')}"></td>
+                                <td><span th:class="'badge ' + ${order.status.toLowerCase()}"
+                                        th:text="${order.status}"></span></td>
+                            </tr>
+                            <tr th:if="${#lists.isEmpty(orders)}">
+                                <td colspan="4" style="text-align: center; color: var(--text-muted);">No active orders
+                                    found.</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+</body>
+
+</html>

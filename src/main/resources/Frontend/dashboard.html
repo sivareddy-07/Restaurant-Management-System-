@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Restaurant Dashboard</title>
-    <link rel="stylesheet" th:href="@{/css/style.css}">
+    <link rel="stylesheet" href="../static/css/style.css" th:href="@{/css/style.css}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 </head>
 
@@ -22,7 +22,8 @@
             <li><a href="/billing">Billing</a></li>
             <li>
                 <form th:action="@{/logout}" method="post" style="margin: 0; padding: 0;">
-                    <button type="submit" style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
+                    <button type="submit"
+                        style="background:none; border:none; color:#ef4444; cursor:pointer; padding:15px 20px; font-size:1rem; font-family:inherit; width:100%; text-align:left;">Logout</button>
                 </form>
             </li>
         </ul>
